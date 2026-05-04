@@ -51,17 +51,6 @@ st.markdown("""
 
 st.markdown("---")
 
-# =========================
-# DEVELOPER INFO
-# =========================
-st.subheader("👨‍💻 Developer Information")
-
-st.info("""
-**Developer:** Muhammad Haseeb Tariq, Muhammad Muneeb Tariq  
-**Project Type:** AI Medical Decision Support System  
-**Purpose:** Educational / Academic Project
-""")
-
 
 # =========================
 # DISCLAIMER
