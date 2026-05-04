@@ -43,3 +43,13 @@ AI-powered clinical decision support system for hematology screening.
 pip install -r requirements.txt
 streamlit run app.py
 >>>>>>> 6bd568f (first upload)
+
+## 📄 Citation
+
+If you use this project, please cite:
+
+https://doi.org/10.5281/zenodo.20028742
+
+
+
+
