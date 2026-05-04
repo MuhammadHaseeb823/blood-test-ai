@@ -115,14 +115,6 @@ with col2:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # =========================
-# DEMO INFO
-# =========================
-st.markdown('<div class="card">', unsafe_allow_html=True)
-st.subheader("🧪 Quick Demo Mode")
-st.info("Demo mode is currently disabled to ensure accurate input flow consistency.")
-st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
 # FEATURES (CARD STYLE)
 # =========================
 st.subheader("🔬 System Capabilities")
