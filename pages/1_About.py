@@ -2,79 +2,46 @@ import streamlit as st
 
 st.set_page_config(page_title="About", layout="wide")
 
-# =========================
-# TITLE
-# =========================
 st.title("📖 About This Application")
 
-st.markdown("---")
+tab1, tab2, tab3 = st.tabs(["📌 Overview", "🧭 How to Use", "⚠️ Disclaimer"])
 
-# =========================
-# DESCRIPTION
-# =========================
-st.markdown("""
-This is a medical diagnostic support tool that analyzes blood test parameters 
-to identify potential hematological conditions and provide structured clinical explanations.
+with tab1:
+    st.markdown("""
+This is a medical diagnostic support tool that analyzes blood test parameters to identify potential hematological conditions and provide structured clinical explanations.
+
+---
+
+## 🔬 Features
+- 25+ hematological conditions detection  
+- AI-style clinical reasoning  
+- Severity classification  
+- Handles missing values  
+- PDF report generation  
 """)
 
-st.markdown("---")
+with tab2:
+    st.markdown("""
+## 🧭 How to Use
 
-# =========================
-# FEATURES
-# =========================
-st.header("🔬 Features")
+1. Go to **Input page**
+2. Enter blood test values
+3. Click analyze (automatic processing)
+4. View **Results page**
+5. Download PDF report
+6. Read **Explanations page** for interpretation
 
-st.markdown("""
-- Analyzes 25+ blood-related conditions  
-- Provides structured clinical reasoning  
-- Handles missing values safely  
-- Generates severity-based interpretation  
-- AI-style explanation formatting  
+---
+
+## 🎯 Designed For
+- Medical students  
+- Educational labs  
+- Research demonstrations  
 """)
 
-st.markdown("---")
+with tab3:
+    st.markdown("""
+⚠️ **Disclaimer**
 
-# =========================
-# SUPPORTED CONDITIONS
-# =========================
-st.header("🧬 Supported Conditions")
-
-conditions = """
-• Iron Deficiency Anemia  
-• Vitamin B12/Folate Deficiency Anemia  
-• Microcytic Anemia  
-• Macrocytic Anemia  
-• Anemia of Chronic Disease  
-• Acute Infection  
-• Chronic Infection  
-• Leukemia  
-• Thrombocytopenia  
-• Thrombocytosis  
-• Dehydration  
-• Hodgkin Lymphoma  
-• Follicular Lymphoma  
-• Non-follicular Lymphoma  
-• Mature T/NK-cell Lymphoma  
-• Other Non-Hodgkin Lymphoma  
-• Other T/NK-cell Lymphoma  
-• B-cell Lymphoma  
-• Multiple Myeloma  
-• Lymphoid Leukemia  
-• Myeloid Leukemia  
-• Nutritional Anemia  
-• Hemolytic Anemia  
-• Aplastic Anemia  
-• Coagulation Defects and Other Hemorrhagic Conditions  
-• Other Diseases of Blood and Blood-Forming Organs  
-"""
-
-st.markdown(conditions)
-
-st.markdown("---")
-
-# =========================
-# DISCLAIMER
-# =========================
-st.error("""
-⚠️ Disclaimer: This application is strictly for educational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment.
+This tool is for educational purposes only and must not be used for real medical diagnosis.
 """)
