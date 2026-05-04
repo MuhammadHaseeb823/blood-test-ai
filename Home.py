@@ -1,66 +1,87 @@
 import streamlit as st
 
 # =========================
-# PAGE CONFIG
+# 🚀 PAGE CONFIG (OPTIMIZED)
 # =========================
 st.set_page_config(
     page_title="Blood Test AI System",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    menu_items=None
 )
 
 # =========================
-# 🚀 PERFORMANCE OPTIMIZATION (RENDER FIX)
+# 🚀 PERFORMANCE OPTIMIZATION
 # =========================
 @st.cache_resource
-def load_engine():
+def get_engine():
     from engine import evaluate
     return evaluate
 
 @st.cache_resource
-def load_pdf():
+def get_pdf():
     from pdf_report import generate_pdf
     return generate_pdf
 
-evaluate = load_engine()
-generate_pdf = load_pdf()
+evaluate = get_engine()
+generate_pdf = get_pdf()
 
 # =========================
-# UI STYLING (DARK MODE SAFE)
+# 🎨 ADVANCED UI STYLING
 # =========================
 st.markdown("""
 <style>
 
+/* Global text */
 html, body, [class*="css"] {
     color: inherit;
+}
+
+/* Main container spacing */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 /* Title */
 .title {
     text-align: center;
-    font-size: 42px;
+    font-size: 46px;
     font-weight: 800;
+    margin-bottom: 10px;
 }
 
+/* Subtitle */
 .subtitle {
     text-align: center;
     font-size: 18px;
-    opacity: 0.8;
+    opacity: 0.85;
+    margin-bottom: 25px;
 }
 
 /* Buttons */
 .stButton > button {
-    background-color: #1f77b4;
+    background: linear-gradient(90deg, #1f77b4, #4facfe);
     color: white;
-    border-radius: 10px;
+    border-radius: 12px;
     height: 3.2em;
-    width: 100%;
     font-size: 16px;
+    border: none;
 }
 
-/* Layout spacing */
-.block-container {
-    padding-top: 2rem;
+/* Cards */
+.card {
+    padding: 20px;
+    border-radius: 14px;
+    background-color: rgba(240, 242, 246, 0.6);
+    margin-bottom: 15px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .card {
+        background-color: rgba(30, 30, 30, 0.6);
+    }
 }
 
 </style>
@@ -78,10 +99,8 @@ Fast • Transparent • Explainable • Educational
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("---")
-
 # =========================
-# NAVIGATION (FIXED)
+# NAVIGATION
 # =========================
 col1, col2 = st.columns(2)
 
@@ -93,46 +112,62 @@ with col2:
     if st.button("📖 About System", use_container_width=True):
         st.switch_page("pages/1_About.py")
 
-st.markdown("---")
+st.markdown("<br>", unsafe_allow_html=True)
 
 # =========================
-# 🧪 DEMO MODE (NEW - OPTIONAL BUT POWERFUL)
+# DEMO INFO
 # =========================
+st.markdown('<div class="card">', unsafe_allow_html=True)
 st.subheader("🧪 Quick Demo Mode")
-
-if st.button("⚡ Run Demo Patient (Auto Fill Example)"):
-    st.session_state["data"] = {
-        "RBC": 3.2,
-        "Hb": 9.5,
-        "MCV": 72,
-        "Hematocrit": 30,
-        "WBC": 12.0,
-        "Platelets": 450
-    }
-    st.switch_page("pages/2_Input.py")
-
-st.markdown("---")
+st.info("Demo mode is currently disabled to ensure accurate input flow consistency.")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
-# FEATURES
+# FEATURES (CARD STYLE)
 # =========================
 st.subheader("🔬 System Capabilities")
 
-st.markdown("""
-- 🧠 AI-style clinical reasoning engine  
-- 🩸 25+ hematological condition detection  
-- 📊 Severity-based interpretation (Mild / Moderate / Severe)  
-- 🔍 Handles missing or incomplete lab data  
-- 📄 Structured medical explanations  
-""")
+col1, col2 = st.columns(2)
 
-st.markdown("---")
+with col1:
+    st.markdown("""
+    <div class="card">
+    🧠 AI-style clinical reasoning engine<br><br>
+    🩸 25+ hematological condition detection<br><br>
+    📊 Severity-based interpretation
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="card">
+    🔍 Handles missing/incomplete data<br><br>
+    📄 Structured medical explanations<br><br>
+    ⚡ Fast interactive analysis
+    </div>
+    """, unsafe_allow_html=True)
 
 # =========================
 # DISCLAIMER
 # =========================
+st.markdown("<br>", unsafe_allow_html=True)
+
 st.error("""
 ⚠️ Disclaimer: This application is strictly for educational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment.
+""")
+
+# =========================
+# 📚 CITATION
+# =========================
+st.markdown("---")
+
+st.subheader("📚 Citation")
+
+st.markdown("""
+**Please cite this work as:**
+
+Tariq, M. H. (2026). *Blood Test AI Diagnostic System (v1.0.0)*. Zenodo.  
+https://doi.org/10.5281/zenodo.20028742
 """)
 
 st.caption("Built with Streamlit • AI Medical Project")
