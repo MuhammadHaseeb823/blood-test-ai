@@ -4,5 +4,7 @@ numpy==2.4.4
 plotly==6.7.0
 fpdf==1.7.2
 reportlab==4.5.0
-python-dateutil==2.9.0.post0
-requests
+python-dotenv==1.0.1
+requests==2.32.3
+Pillow==12.2.0
+altair==6.1.0
