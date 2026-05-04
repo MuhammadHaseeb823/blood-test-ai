@@ -2,10 +2,59 @@ import streamlit as st
 from engine import evaluate
 from pdf_report import generate_pdf
 
-st.set_page_config(page_title="Report", layout="wide")
+# =========================
+# PAGE CONFIG
+# =========================
+st.set_page_config(
+    page_title="Report",
+    layout="wide"
+)
 
-st.title("🏥 Report")
+# =========================
+# DARK MODE SAFE CSS FIX
+# =========================
+st.markdown("""
+<style>
 
+/* Global text */
+html, body, [class*="css"] {
+    color: inherit;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+    color: inherit !important;
+}
+
+/* Fix containers */
+.block-container {
+    padding-top: 2rem;
+}
+
+/* Safe card styling (theme-aware) */
+.card {
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(120,120,120,0.3);
+    margin-bottom: 10px;
+}
+
+/* Improve readability in dark mode */
+div {
+    color: inherit;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
+# TITLE
+# =========================
+st.title("🏥 Clinical Report")
+
+# =========================
+# DATA CHECK
+# =========================
 data = st.session_state.get("data", None)
 
 if not data:
@@ -41,10 +90,11 @@ def get_severity(condition):
     else:
         return "🟢 LOW RISK"
 
-
 # =========================
 # SUMMARY
 # =========================
+st.markdown("## 🧠 AI Summary")
+
 summary_points = []
 
 if results:
@@ -53,12 +103,10 @@ if results:
 else:
     summary_points.append("No significant hematological abnormalities detected.")
 
-st.markdown("## 🧠 Summary")
 for s in summary_points:
     st.write("• " + s)
 
 st.markdown("---")
-
 
 # =========================
 # RESULTS DISPLAY
@@ -68,43 +116,31 @@ if not results:
 else:
     for r in results:
         st.markdown("---")
+
         st.markdown(f"## 🧬 {r['condition']}")
         st.markdown(f"### {get_severity(r['condition'])}")
 
         st.markdown("### 🔍 Clinical Suggestions")
 
-        st.markdown(
-            f"""
-            <div style="
-                padding:15px;
-                border-radius:10px;
-                background-color:#f5f7ff;
-                border:1px solid #d0d7ff;
-                margin-bottom:10px;
-            ">
-                <b>Suggestion 1:</b><br>
-                {r.get('suggestion_1','N/A')}
-            </div>
+        # Suggestion 1 card
+        st.markdown(f"""
+        <div class="card">
+            <b>Suggestion 1:</b><br>
+            {r.get('suggestion_1','N/A')}
+        </div>
+        """, unsafe_allow_html=True)
 
-            <div style="
-                padding:15px;
-                border-radius:10px;
-                background-color:#fff7f5;
-                border:1px solid #ffd0d0;
-            ">
-                <b>Suggestion 2:</b><br>
-                {r.get('suggestion_2','N/A')}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
+        # Suggestion 2 card
+        st.markdown(f"""
+        <div class="card">
+            <b>Suggestion 2:</b><br>
+            {r.get('suggestion_2','N/A')}
+        </div>
+        """, unsafe_allow_html=True)
 
 # =========================
-# PDF DOWNLOAD
+# PDF EXPORT
 # =========================
-from pdf_report import generate_pdf
-
 st.markdown("---")
 st.subheader("📄 Export Report")
 
@@ -116,6 +152,7 @@ st.download_button(
     file_name="clinical_report.pdf",
     mime="application/pdf"
 )
+
 # =========================
 # NAVIGATION
 # =========================
