@@ -1,5 +1,12 @@
 import streamlit as st
+import os
 
+# =========================
+# 🚀 HEALTH CHECK (FOR UPTIME ROBOT)
+# =========================
+if os.getenv("RENDER_EXTERNAL_URL") and st.query_params.get("health") == "true":
+    st.write("OK")
+    st.stop()
 # =========================
 # 🚀 PAGE CONFIG
 # =========================
