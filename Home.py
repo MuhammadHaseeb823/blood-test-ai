@@ -10,6 +10,22 @@ st.set_page_config(
 )
 
 # =========================
+# 🚀 PERFORMANCE OPTIMIZATION (RENDER FIX)
+# =========================
+@st.cache_resource
+def load_engine():
+    from engine import evaluate
+    return evaluate
+
+@st.cache_resource
+def load_pdf():
+    from pdf_report import generate_pdf
+    return generate_pdf
+
+evaluate = load_engine()
+generate_pdf = load_pdf()
+
+# =========================
 # UI STYLING (DARK MODE SAFE)
 # =========================
 st.markdown("""
@@ -76,6 +92,24 @@ with col1:
 with col2:
     if st.button("📖 About System", use_container_width=True):
         st.switch_page("pages/1_About.py")
+
+st.markdown("---")
+
+# =========================
+# 🧪 DEMO MODE (NEW - OPTIONAL BUT POWERFUL)
+# =========================
+st.subheader("🧪 Quick Demo Mode")
+
+if st.button("⚡ Run Demo Patient (Auto Fill Example)"):
+    st.session_state["data"] = {
+        "RBC": 3.2,
+        "Hb": 9.5,
+        "MCV": 72,
+        "Hematocrit": 30,
+        "WBC": 12.0,
+        "Platelets": 450
+    }
+    st.switch_page("pages/2_Input.py")
 
 st.markdown("---")
 
