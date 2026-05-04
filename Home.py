@@ -11,22 +11,6 @@ st.set_page_config(
 )
 
 # =========================
-# 🚀 PERFORMANCE OPTIMIZATION
-# =========================
-@st.cache_resource
-def get_engine():
-    from engine import evaluate
-    return evaluate
-
-@st.cache_resource
-def get_pdf():
-    from pdf_report import generate_pdf
-    return generate_pdf
-
-evaluate = get_engine()
-generate_pdf = get_pdf()
-
-# =========================
 # 💎 PREMIUM UI STYLING
 # =========================
 st.markdown("""
@@ -185,12 +169,12 @@ with col6:
     """, unsafe_allow_html=True)
 
 # =========================
-# DISCLAIMER
+# DISCLAIMER (FIXED POSITION)
 # =========================
 st.markdown("<br>", unsafe_allow_html=True)
 
-st.error("""
-⚠️ Disclaimer: This application is strictly for educational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment.
+st.warning("""
+⚠️ This application is strictly for educational purposes only and should not be used as a substitute for professional medical advice, diagnosis, or treatment.
 """)
 
 # =========================
