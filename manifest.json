@@ -1,0 +1,16 @@
+{
+  "name": "Blood Test AI Analysis",
+  "short_name": "BloodAI",
+  "description": "AI-powered blood test analysis app.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff4b4b",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/822/822143.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
