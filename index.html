@@ -1,21 +1,2259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Test AI</title>
-    <link rel="manifest" href="manifest.json">
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
-        iframe { width: 100%; height: 100%; border: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Blood Test AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+header {
+    background: linear-gradient(135deg, #7f1d1d, #b91c1c);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.subtitle {
+    margin-top: 8px;
+    font-size: 15px;
+    opacity: 0.95;
+}
+
+.disclaimer {
+    background: #fff7ed;
+    border-left: 5px solid #f97316;
+    padding: 14px 18px;
+    margin: 20px auto;
+    max-width: 1200px;
+    border-radius: 8px;
+    color: #7c2d12;
+}
+
+nav {
+    background: white;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav button {
+    border: none;
+    background: #e5e7eb;
+    color: #111827;
+    padding: 10px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+nav button:hover {
+    background: #d1d5db;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.hero {
+    background: white;
+    border-radius: 14px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    margin-top: 20px;
+}
+
+.hero h1 {
+    color: #991b1b;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    max-width: 800px;
+    margin: 12px auto;
+    line-height: 1.7;
+}
+
+.primary {
+    background: #b91c1c !important;
+    color: white !important;
+}
+
+.secondary {
+    background: #374151 !important;
+    color: white !important;
+}
+
+button.action {
+    border: none;
+    padding: 12px 20px;
+    margin: 8px 5px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #991b1b;
+}
+
+.patient-grid,
+.lab-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 15px;
+    width: 100%;
+}
+
+.field small {
+    margin-top: 5px;
+    color: #64748b;
+}
+
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #7f1d1d;
+    border-bottom: 2px solid #fecaca;
+    padding-bottom: 8px;
+}
+
+.button-row {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.summary {
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 16px;
+    border-radius: 7px;
+    margin-bottom: 20px;
+}
+
+.result-card {
+    border-radius: 10px;
+    margin: 15px 0;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border-left: 7px solid #16a34a;
+}
+
+.result-card.high {
+    border-left-color: #dc2626;
+}
+
+.result-card.moderate {
+    border-left-color: #f97316;
+}
+
+.result-card.low {
+    border-left-color: #16a34a;
+}
+
+.result-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.result-header h3 {
+    margin: 0;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge.high {
+    background: #dc2626;
+}
+
+.badge.moderate {
+    background: #f97316;
+}
+
+.badge.low {
+    background: #16a34a;
+}
+
+.suggestion {
+    background: #f8fafc;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.explanation {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    white-space: pre-line;
+    line-height: 1.65;
+}
+
+.reference {
+    color: #475569;
+    margin: 5px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th,
+td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #f3f4f6;
+}
+
+footer {
+    margin-top: 40px;
+    background: #111827;
+    color: white;
+    text-align: center;
+    padding: 25px;
+    line-height: 1.6;
+}
+
+@media (max-width: 750px) {
+    .patient-grid,
+    .lab-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding: 25px 18px;
+    }
+
+    nav button {
+        width: 100%;
+    }
+}
+
+@media print {
+    nav,
+    .button-row,
+    header {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .page {
+        display: block !important;
+    }
+}
+</style>
 </head>
+
 <body>
-    <iframe src="https://blood-test-ai-8gzs.onrender.com/"></iframe>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+
+<header>
+    <div class="logo">🩸 Blood Test AI</div>
+    <div class="subtitle">
+        Clinical Blood Test Analysis & Structured Diagnostic Support
+    </div>
+</header>
+
+<div class="disclaimer">
+    ⚠️ <strong>Disclaimer:</strong>
+    This application is strictly for educational purposes only and should
+    not be used as a substitute for professional medical advice, diagnosis,
+    or treatment.
+</div>
+
+<nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('input')">Start Analysis</button>
+    <button onclick="showPage('about')">About System</button>
+    <button onclick="showPage('results')">Results</button>
+    <button onclick="showPage('explanations')">Clinical Explanations</button>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+    <div class="hero">
+
+        <h1>Blood Test AI</h1>
+
+        <p>
+            A rule-based clinical reasoning engine designed to analyze
+            laboratory parameters and produce structured educational
+            findings, severity classification, suggestions, summaries
+            and clinical explanations.
+        </p>
+
+        <div class="button-row">
+            <button class="action primary"
+                    onclick="showPage('input')">
+                Start Analysis
+            </button>
+
+            <button class="action secondary"
+                    onclick="showPage('about')">
+                Learn About System
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section id="about" class="page">
+
+    <div class="card">
+
+        <h2>About Blood Test AI</h2>
+
+        <p>
+            Blood Test AI analyzes laboratory values using a rule-based
+            reasoning system. Multiple abnormal findings can be identified
+            from a single patient dataset.
+        </p>
+
+        <p>
+            The system is intended for educational and demonstration
+            purposes. It does not provide a medical diagnosis.
+        </p>
+
+        <div class="disclaimer">
+            Educational use only. Results require professional clinical
+            interpretation and appropriate confirmatory testing.
+        </div>
+
+        <h2>How the System Works</h2>
+
+        <ol>
+            <li>Patient information is entered.</li>
+            <li>Laboratory values are entered.</li>
+            <li>The rule-based engine evaluates the values.</li>
+            <li>Potential findings are identified.</li>
+            <li>Findings are assigned severity levels.</li>
+            <li>Suggestions and educational explanations are displayed.</li>
+        </ol>
+
+    </div>
+
+</section>
+
+
+<!-- INPUT -->
+
+<section id="input" class="page">
+
+    <div class="card">
+
+        <h2>Patient Information</h2>
+
+        <div class="patient-grid">
+
+            <div class="field">
+                <label for="patient_name">Patient Name</label>
+                <input id="patient_name" type="text">
+            </div>
+
+            <div class="field">
+                <label for="patient_id">Patient ID</label>
+                <input id="patient_id" type="text">
+            </div>
+
+            <div class="field">
+                <label for="age">Age</label>
+                <input id="age" type="number" min="0">
+            </div>
+
+            <div class="field">
+                <label for="gender">Gender</label>
+                <select id="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Laboratory Parameters</h2>
+
+        <p>
+            Enter laboratory results in the units shown below. Leave a
+            parameter blank if it was not tested.
+        </p>
+
+
+        <h3 class="section-title">Complete Blood Count</h3>
+
+        <div class="lab-grid">
+
+            <div class="field">
+                <label>RBC</label>
+                <input id="rbc" type="number" step="any">
+                <small>Unit: ×10¹²/L</small>
+            </div>
+
+            <div class="field">
+                <label>Hemoglobin (Hb)</label>
+                <input id="hb" type="number" step="any">
+                <small>Unit: g/L</small>
+            </div>
+
+            <div class="field">
+                <label>MCV</label>
+                <input id="mcv" type="number" step="any">
+                <small>Unit: fL</small>
+            </div>
+
+            <div class="field">
+                <label>WBC</label>
+                <input id="wbc" type="number" step="any">
+                <small>Unit: ×10⁹/L</small>
+            </div>
+
+            <div class="field">
+                <label>Platelets (PLT)</label>
+                <input id="plt" type="number" step="any">
+                <small>Unit: ×10⁹/L</small>
+            </div>
+
+            <div class="field">
+                <label>Monocyte Number</label>
+                <input id="monocyte_number" type="number" step="any">
+                <small>Unit: ×10⁹/L</small>
+            </div>
+
+        </div>
+
+
+        <h3 class="section-title">Iron / Vitamin Studies</h3>
+
+        <div class="lab-grid">
+
+            <div class="field">
+                <label>Ferritin</label>
+                <input id="ferritin" type="number" step="any">
+                <small>Unit: µg/L</small>
+            </div>
+
+            <div class="field">
+                <label>Iron</label>
+                <input id="iron" type="number" step="any">
+                <small>Unit: µmol/L</small>
+            </div>
+
+            <div class="field">
+                <label>Vitamin B12</label>
+                <input id="vitamin_b12" type="number" step="any">
+                <small>Unit: pmol/L</small>
+            </div>
+
+            <div class="field">
+                <label>Folate</label>
+                <input id="folate" type="number" step="any">
+                <small>Unit: nmol/L</small>
+            </div>
+
+        </div>
+
+
+        <h3 class="section-title">Inflammation / Infection</h3>
+
+        <div class="lab-grid">
+
+            <div class="field">
+                <label>CRP</label>
+                <input id="crp" type="number" step="any">
+                <small>Unit: mg/L</small>
+            </div>
+
+            <div class="field">
+                <label>ESR</label>
+                <input id="esr" type="number" step="any">
+                <small>Unit: mm/hour</small>
+            </div>
+
+            <div class="field">
+                <label>LDH</label>
+                <input id="ldh" type="number" step="any">
+                <small>Unit: U/L</small>
+            </div>
+
+        </div>
+
+
+        <h3 class="section-title">Kidney / Electrolytes</h3>
+
+        <div class="lab-grid">
+
+            <div class="field">
+                <label>Urea</label>
+                <input id="urea" type="number" step="any">
+                <small>Unit: mg/dL</small>
+            </div>
+
+            <div class="field">
+                <label>Creatinine</label>
+                <input id="creatinine" type="number" step="any">
+                <small>Unit: µmol/L</small>
+            </div>
+
+            <div class="field">
+                <label>Calcium</label>
+                <input id="calcium" type="number" step="any">
+                <small>Unit: mmol/L</small>
+            </div>
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button class="action primary"
+                    onclick="runAnalysis()">
+                Run Blood Test Analysis
+            </button>
+
+            <button class="action secondary"
+                    onclick="clearForm()">
+                Clear Form
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- RESULTS -->
+
+<section id="results" class="page">
+
+    <div class="card">
+
+        <h2>Analysis Results</h2>
+
+        <div id="summary" class="summary">
+            No analysis has been performed yet.
+        </div>
+
+        <div id="resultsContainer">
+            <p>
+                Enter patient laboratory values and run the analysis.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Patient Laboratory Data</h2>
+
+        <div id="patientDataTable">
+            No patient data available.
+        </div>
+
+        <div class="button-row">
+
+            <button class="action primary"
+                    onclick="downloadJSON()">
+                Download Patient JSON
+            </button>
+
+            <button class="action secondary"
+                    onclick="window.print()">
+                Download / Print Report
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- EXPLANATIONS -->
+
+<section id="explanations" class="page">
+
+    <div class="card">
+
+        <h2>Clinical Explanations</h2>
+
+        <div id="explanationsContainer">
+
+            <p>
+                Run an analysis first to display clinical explanations
+                for identified findings.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<footer>
+
+    <strong>Blood Test AI — Educational Clinical Reasoning System</strong>
+
+    <p>
+        Educational disclaimer: This report is for educational purposes only
+        and is not a substitute for professional medical advice, diagnosis
+        or treatment.
+    </p>
+
+    <p>
+        Generated by Blood Test AI.
+    </p>
+
+</footer>
+
+
+<script>
+
+let lastData = null;
+let lastResults = [];
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function showPage(pageName) {
+
+    document.querySelectorAll(".page").forEach(function(page) {
+        page.classList.remove("active");
+    });
+
+    const page = document.getElementById(pageName);
+
+    if (page) {
+        page.classList.add("active");
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================
+   SAFE NUMBER
+========================= */
+
+function getNumber(id) {
+
+    const element = document.getElementById(id);
+
+    if (!element) {
+        return null;
+    }
+
+    const value = element.value.trim();
+
+    if (value === "") {
+        return null;
+    }
+
+    const number = Number(value);
+
+    return Number.isFinite(number) ? number : null;
+}
+
+
+/* =========================
+   PATIENT DATA
+========================= */
+
+function collectData() {
+
+    return {
+
+        patient_name:
+            document.getElementById("patient_name").value.trim(),
+
+        patient_id:
+            document.getElementById("patient_id").value.trim(),
+
+        age:
+            getNumber("age"),
+
+        gender:
+            document.getElementById("gender").value,
+
+        rbc:
+            getNumber("rbc"),
+
+        hb:
+            getNumber("hb"),
+
+        mcv:
+            getNumber("mcv"),
+
+        ferritin:
+            getNumber("ferritin"),
+
+        vitamin_b12:
+            getNumber("vitamin_b12"),
+
+        folate:
+            getNumber("folate"),
+
+        iron:
+            getNumber("iron"),
+
+        wbc:
+            getNumber("wbc"),
+
+        crp:
+            getNumber("crp"),
+
+        esr:
+            getNumber("esr"),
+
+        monocyte_number:
+            getNumber("monocyte_number"),
+
+        ldh:
+            getNumber("ldh"),
+
+        plt:
+            getNumber("plt"),
+
+        urea:
+            getNumber("urea"),
+
+        creatinine:
+            getNumber("creatinine"),
+
+        calcium:
+            getNumber("calcium")
+    };
+}
+
+
+/* =========================
+   RULE HELPERS
+========================= */
+
+function valid(x) {
+
+    return x !== null && x !== 0;
+}
+
+
+/* =========================
+   ANALYSIS ENGINE
+========================= */
+
+function evaluate(d) {
+
+    const results = [];
+
+    /*
+       The original Python engine uses direct comparisons.
+       Missing values are therefore not evaluated.
+    */
+
+    if (
+        d.rbc !== null &&
+        d.hb !== null &&
+        d.mcv !== null &&
+        d.ferritin !== null &&
+        d.gender
+    ) {
+
+        const hbCut =
+            d.gender === "Male" ? 130 : 120;
+
+        if (
+            d.rbc < 4.5 &&
+            d.hb < hbCut &&
+            d.mcv < 80 &&
+            d.ferritin < 30
+        ) {
+
+            results.push({
+                condition: "Iron Deficiency Anemia",
+
+                suggestion_1:
+                    "Blood morphology to confirm Iron Deficiency",
+
+                suggestion_2:
+                    "Consider Bone Marrow Biopsy if no improvement with iron supplementation"
+            });
         }
-    </script>
+    }
+
+
+    /* 2 B12 / FOLATE DEFICIENCY */
+
+    if (
+        d.rbc !== null &&
+        d.vitamin_b12 !== null &&
+        d.folate !== null
+    ) {
+
+        if (
+            d.rbc < 4.5 &&
+            (
+                d.vitamin_b12 < 200 ||
+                d.folate < 3
+            )
+        ) {
+
+            results.push({
+
+                condition:
+                    "Vitamin B12/Folate Deficiency Anemia",
+
+                suggestion_1:
+                    "Consider Serum Methylmalonic Acid (MMA) test for B12 deficiency",
+
+                suggestion_2:
+                    "Blood morphology for further confirmation for B12 deficiency"
+            });
+        }
+    }
+
+
+    /* 3 MICROCYTIC */
+
+    if (
+        d.rbc !== null &&
+        d.mcv !== null &&
+        d.rbc < 4.5 &&
+        d.mcv < 80
+    ) {
+
+        results.push({
+
+            condition:
+                "Microcytic Anemia",
+
+            suggestion_1:
+                "Serum Iron levels, TIBC, Serum Ferritin, Blood morphology for further confirmation",
+
+            suggestion_2:
+                "After confirmation Bone Marrow Biopsy for microcytic anemia"
+        });
+    }
+
+
+    /* 4 MACROCYTIC */
+
+    if (
+        d.rbc !== null &&
+        d.mcv !== null &&
+        d.rbc < 4.5 &&
+        d.mcv > 100
+    ) {
+
+        results.push({
+
+            condition:
+                "Macrocytic Anemia",
+
+            suggestion_1:
+                "B12, Homocysteine, Blood smear, MMA, Serum Folate for confirmation",
+
+            suggestion_2:
+                "Consider Serum Methylmalonic Acid (MMA) test and blood morphology confirmation"
+        });
+    }
+
+
+    /* 5 ANEMIA OF CHRONIC DISEASE */
+
+    if (
+        d.rbc !== null &&
+        d.mcv !== null &&
+        d.iron !== null &&
+        d.rbc < 4.5 &&
+        d.mcv >= 80 &&
+        d.mcv <= 100 &&
+        d.iron >= 30
+    ) {
+
+        results.push({
+
+            condition:
+                "Anemia of Chronic Disease",
+
+            suggestion_1:
+                "Reticulocyte count and blood morphology for confirmation",
+
+            suggestion_2:
+                "Consider Erythropoietin level and Bone Marrow Biopsy if indicated"
+        });
+    }
+
+
+    /* 6 ACUTE INFECTION */
+
+    if (
+        d.wbc !== null &&
+        d.crp !== null &&
+        d.wbc > 11 &&
+        d.crp > 5
+    ) {
+
+        results.push({
+
+            condition:
+                "Acute Infection",
+
+            suggestion_1:
+                "Consider Blood Cultures and specific pathogen testing",
+
+            suggestion_2:
+                "Further infectious disease workup depending on clinical suspicion"
+        });
+    }
+
+
+    /* 7 CHRONIC INFECTION */
+
+    if (
+        d.wbc !== null &&
+        d.esr !== null &&
+        d.wbc > 11 &&
+        d.esr > 20
+    ) {
+
+        results.push({
+
+            condition:
+                "Chronic Infection",
+
+            suggestion_1:
+                "Consider PCR Testing for specific pathogens",
+
+            suggestion_2:
+                "Serology testing for chronic infection confirmation"
+        });
+    }
+
+
+    /* 8 ALLERGIC / PARASITIC */
+
+    if (
+        d.monocyte_number !== null &&
+        d.monocyte_number > 6
+    ) {
+
+        results.push({
+
+            condition:
+                "Allergic Reaction/Parasitic Infection",
+
+            suggestion_1:
+                "Consider Skin Prick Test for allergies",
+
+            suggestion_2:
+                "Wide range of immunology allergy testing for confirmation"
+        });
+    }
+
+
+    /* 9 LEUKEMIA */
+
+    if (
+        d.wbc !== null &&
+        d.ldh !== null &&
+        d.wbc > 11 &&
+        d.ldh > 300
+    ) {
+
+        results.push({
+
+            condition:
+                "Leukemia",
+
+            suggestion_1:
+                "Blood morphology, Immunophenotyping, Cytogenetic and Molecular testing",
+
+            suggestion_2:
+                "Bone Marrow Biopsy and flow cytometry for confirmation"
+        });
+    }
+
+
+    /* 10 THROMBOCYTOPENIA */
+
+    if (
+        d.plt !== null &&
+        d.plt < 150
+    ) {
+
+        results.push({
+
+            condition:
+                "Thrombocytopenia",
+
+            suggestion_1:
+                "Coagulation screen and blood morphology",
+
+            suggestion_2:
+                "Bone Marrow Biopsy if etiology is unclear"
+        });
+    }
+
+
+    /* 11 THROMBOCYTOSIS */
+
+    if (
+        d.plt !== null &&
+        d.plt > 450
+    ) {
+
+        results.push({
+
+            condition:
+                "Thrombocytosis",
+
+            suggestion_1:
+                "Coagulation screen and inflammatory markers",
+
+            suggestion_2:
+                "Bone Marrow Biopsy if secondary causes suspected"
+        });
+    }
+
+
+    /* 12 DEHYDRATION */
+
+    if (
+        d.urea !== null &&
+        d.creatinine !== null &&
+        d.urea > 20 &&
+        d.creatinine > 110
+    ) {
+
+        results.push({
+
+            condition:
+                "Dehydration",
+
+            suggestion_1:
+                "Serum electrolytes and osmolality",
+
+            suggestion_2:
+                "Urinalysis to assess hydration status"
+        });
+    }
+
+
+    /* 13 HODGKIN LYMPHOMA */
+
+    if (
+        d.wbc !== null &&
+        d.ldh !== null &&
+        d.esr !== null &&
+        d.wbc > 11 &&
+        d.ldh > 300 &&
+        d.esr > 20
+    ) {
+
+        results.push({
+
+            condition:
+                "Hodgkin Lymphoma",
+
+            suggestion_1:
+                "Blood morphology to confirm suspicion",
+
+            suggestion_2:
+                "Lymph node biopsy for definitive diagnosis"
+        });
+    }
+
+
+    /* 14 FOLLICULAR LYMPHOMA */
+
+    if (
+        d.ldh !== null &&
+        d.esr !== null &&
+        d.ldh <= 300 &&
+        d.esr > 20
+    ) {
+
+        results.push({
+
+            condition:
+                "Follicular Lymphoma",
+
+            suggestion_1:
+                "Blood morphology and immunophenotyping",
+
+            suggestion_2:
+                "Lymph node biopsy for confirmation"
+        });
+    }
+
+
+    /* 15 NON-FOLLICULAR LYMPHOMA */
+
+    if (
+        d.wbc !== null &&
+        d.ldh !== null &&
+        d.wbc > 11 &&
+        d.ldh > 300
+    ) {
+
+        results.push({
+
+            condition:
+                "Non-follicular Lymphoma",
+
+            suggestion_1:
+                "Blood morphology and immunophenotyping",
+
+            suggestion_2:
+                "Lymph node biopsy and flow cytometry"
+        });
+    }
+
+
+    /* 16 T/NK CELL LYMPHOMA */
+
+    if (
+        d.calcium !== null &&
+        d.calcium > 2.5
+    ) {
+
+        results.push({
+
+            condition:
+                "T/NK-cell Lymphoma",
+
+            suggestion_1:
+                "Blood morphology and flow cytometry",
+
+            suggestion_2:
+                "Lymph node biopsy for confirmation"
+        });
+    }
+
+
+    /* 17 OTHER NON-HODGKIN */
+
+    if (
+        d.crp !== null &&
+        d.crp > 5
+    ) {
+
+        results.push({
+
+            condition:
+                "Other Non-Hodgkin Lymphoma",
+
+            suggestion_1:
+                "Blood morphology and immunophenotyping",
+
+            suggestion_2:
+                "Lymph node biopsy for confirmation"
+        });
+    }
+
+
+    /* 18 MULTIPLE MYELOMA */
+
+    if (
+        d.calcium !== null &&
+        d.rbc !== null &&
+        d.calcium > 2.5 &&
+        d.rbc < 4.5
+    ) {
+
+        results.push({
+
+            condition:
+                "Multiple Myeloma",
+
+            suggestion_1:
+                "Serum protein electrophoresis",
+
+            suggestion_2:
+                "Bone marrow biopsy for confirmation"
+        });
+    }
+
+
+    /* 19 OTHER BLOOD DISEASE */
+
+    if (
+        d.wbc !== null &&
+        d.plt !== null &&
+        d.wbc >= 4 &&
+        d.plt >= 150
+    ) {
+
+        results.push({
+
+            condition:
+                "Other Diseases of Blood and Blood-forming Organs",
+
+            suggestion_1:
+                "Additional hematological testing based on clinical suspicion",
+
+            suggestion_2:
+                "Further diagnostic workup as required"
+        });
+    }
+
+
+    return results;
+}
+
+
+/* =========================
+   SEVERITY
+========================= */
+
+function getSeverity(condition) {
+
+    const high = [
+        "Leukemia",
+        "Myeloid Leukemia",
+        "Lymphoid Leukemia",
+        "Multiple Myeloma",
+        "Hodgkin Lymphoma"
+    ];
+
+    const moderate = [
+        "Thrombocytopenia",
+        "Thrombocytosis",
+        "Chronic Infection",
+        "Anemia of Chronic Disease"
+    ];
+
+    if (high.includes(condition)) {
+        return {
+            level: "HIGH",
+            className: "high"
+        };
+    }
+
+    if (moderate.includes(condition)) {
+        return {
+            level: "MODERATE",
+            className: "moderate"
+        };
+    }
+
+    return {
+        level: "LOW",
+        className: "low"
+    };
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+function generateSummary(results) {
+
+    if (!results.length) {
+        return "No significant abnormalities detected.";
+    }
+
+    let high = 0;
+    let moderate = 0;
+
+    results.forEach(function(result) {
+
+        const severity =
+            getSeverity(result.condition).level;
+
+        if (severity === "HIGH") {
+            high++;
+        }
+
+        if (severity === "MODERATE") {
+            moderate++;
+        }
+    });
+
+    return (
+        results.length +
+        " abnormal findings detected. " +
+        high +
+        " high-risk and " +
+        moderate +
+        " moderate-risk conditions identified. " +
+        "Clinical correlation and further diagnostic confirmation recommended."
+    );
+}
+
+
+/* =========================
+   EXPLANATIONS
+========================= */
+
+const explanations = {
+
+"Iron Deficiency Anemia": {
+explanation:
+`CLINICAL SUMMARY:
+Iron deficiency anemia is caused by inadequate iron availability leading to reduced hemoglobin synthesis and impaired erythropoiesis.
+
+PATHOPHYSIOLOGY:
+Iron depletion reduces heme formation, resulting in microcytic hypochromic red blood cells and reduced oxygen-carrying capacity.
+
+LAB INTERPRETATION:
+Hb, MCV and ferritin are considered together.
+
+DIFFERENTIAL DIAGNOSIS:
+- Chronic blood loss
+- Thalassemia trait
+- Anemia of chronic disease`,
+
+references: [
+"NICE Guideline NG239: Anaemia Management in Adults",
+"WHO Haemoglobin Concentrations for the Diagnosis of Anaemia",
+"American Society of Hematology Iron Deficiency Guidelines",
+"British Society for Haematology: Iron Deficiency Anaemia Guidelines"
+]
+},
+
+
+"Vitamin B12/Folate Deficiency Anemia": {
+explanation:
+`CLINICAL SUMMARY:
+Megaloblastic anemia due to impaired DNA synthesis caused by vitamin B12 or folate deficiency.
+
+PATHOPHYSIOLOGY:
+Defective DNA synthesis leads to ineffective erythropoiesis.
+
+LAB INTERPRETATION:
+Vitamin B12 and folate should be interpreted with the blood count and clinical context.
+
+DIFFERENTIAL DIAGNOSIS:
+- Liver disease
+- Alcohol-induced macrocytosis
+- Myelodysplastic syndromes`,
+
+references: [
+"British Society for Haematology: Megaloblastic Anaemia Guidelines",
+"NIH Office of Dietary Supplements: Vitamin B12 Fact Sheet",
+"NICE Clinical Knowledge Summary: Anaemia"
+]
+},
+
+
+"Microcytic Anemia": {
+explanation:
+`CLINICAL SUMMARY:
+Microcytic anemia is characterized by reduced red blood cell size due to impaired hemoglobin synthesis.
+
+PATHOPHYSIOLOGY:
+Deficient hemoglobin production leads to decreased mean corpuscular volume.
+
+LAB INTERPRETATION:
+MCV is reduced.
+
+DIFFERENTIAL DIAGNOSIS:
+- Iron deficiency anemia
+- Thalassemia
+- Chronic inflammatory anemia`,
+
+references: [
+"ASH Red Cell Disorders Guidelines",
+"WHO Hematology Laboratory Manual",
+"BMJ Clinical Review: Microcytic Anemia"
+]
+},
+
+
+"Macrocytic Anemia": {
+explanation:
+`CLINICAL SUMMARY:
+Macrocytic anemia is characterized by enlarged red blood cells.
+
+PATHOPHYSIOLOGY:
+Delayed nuclear maturation can produce enlarged erythrocytes.
+
+LAB INTERPRETATION:
+MCV is elevated.
+
+DIFFERENTIAL DIAGNOSIS:
+- Vitamin B12 deficiency
+- Folate deficiency
+- Liver disease`,
+
+references: [
+"NICE Clinical Knowledge Summary: Anaemia",
+"Mayo Clinic Hematology Reference Guide",
+"ASH Macrocytosis Clinical Guidelines"
+]
+},
+
+
+"Anemia of Chronic Disease": {
+explanation:
+`CLINICAL SUMMARY:
+Inflammation-mediated anemia due to impaired iron utilization.
+
+PATHOPHYSIOLOGY:
+Inflammatory signaling can increase hepcidin and alter iron availability.
+
+LAB INTERPRETATION:
+Iron studies should be interpreted with inflammatory markers and clinical context.
+
+DIFFERENTIAL DIAGNOSIS:
+- Iron deficiency anemia
+- Chronic kidney disease anemia`,
+
+references: [
+"WHO Iron Metabolism Technical Report",
+"NICE Chronic Kidney Disease Anaemia guidance"
+]
+},
+
+
+"Acute Infection": {
+explanation:
+`CLINICAL SUMMARY:
+An acute infectious or inflammatory process may be associated with elevated white blood cells and CRP.
+
+LAB INTERPRETATION:
+WBC and CRP are interpreted together with symptoms, examination and other investigations.
+
+DIFFERENTIAL DIAGNOSIS:
+- Bacterial infection
+- Viral infection
+- Other inflammatory conditions`,
+
+references: [
+"CDC Infectious Diseases guidance",
+"WHO Acute Infection guidance"
+]
+},
+
+
+"Chronic Infection": {
+explanation:
+`CLINICAL SUMMARY:
+Long-standing infectious or inflammatory processes can be associated with elevated inflammatory markers.
+
+LAB INTERPRETATION:
+ESR should be interpreted with the patient's clinical history and other laboratory findings.
+
+DIFFERENTIAL DIAGNOSIS:
+- Chronic infection
+- Autoimmune disease
+- Other inflammatory disorders`,
+
+references: [
+"WHO Infectious Disease guidance",
+"BMJ Clinical Reviews"
+]
+},
+
+
+"Allergic Reaction/Parasitic Infection": {
+explanation:
+`CLINICAL SUMMARY:
+The rule engine flags this category when the entered monocyte-number value exceeds the programmed threshold.
+
+CLINICAL NOTE:
+This rule is an educational screening rule and does not establish an allergy or parasitic infection.
+
+DIFFERENTIAL DIAGNOSIS:
+- Allergic disorders
+- Parasitic infections
+- Other immune or inflammatory conditions`,
+
+references: [
+"AAAAI Allergy Practice Parameters",
+"CDC Parasitic Disease Guidelines"
+]
+},
+
+
+"Leukemia": {
+explanation:
+`CLINICAL SUMMARY:
+Leukemia refers to malignant clonal disorders of hematopoietic cells.
+
+PATHOPHYSIOLOGY:
+Abnormal hematopoietic cell proliferation can interfere with normal blood-cell production.
+
+CLINICAL NOTE:
+The programmed laboratory rule does NOT diagnose leukemia.
+
+Confirmatory evaluation requires appropriate specialist assessment and diagnostic testing.`,
+
+references: [
+"NCI Leukemia Treatment Guidelines",
+"WHO Classification of Hematologic Malignancies",
+"ASH Leukemia Clinical Guidance"
+]
+},
+
+
+"Hodgkin Lymphoma": {
+explanation:
+`CLINICAL SUMMARY:
+Hodgkin lymphoma is a lymphoid malignancy.
+
+CLINICAL NOTE:
+The programmed laboratory rule only produces an educational flag. It cannot establish a lymphoma diagnosis.
+
+Definitive diagnosis requires appropriate clinical evaluation and tissue diagnosis when indicated.`,
+
+references: [
+"NCI Hodgkin Lymphoma Treatment Guide",
+"WHO Lymphoid Neoplasms Classification",
+"ESMO Clinical Guidelines"
+]
+},
+
+
+"Follicular Lymphoma": {
+explanation:
+`CLINICAL SUMMARY:
+Follicular lymphoma is an indolent B-cell non-Hodgkin lymphoma.
+
+CLINICAL NOTE:
+The laboratory rule used by this application is not sufficient to diagnose follicular lymphoma.
+
+Definitive diagnosis requires specialist evaluation and appropriate diagnostic testing.`,
+
+references: [
+"NCCN Guidelines: Follicular Lymphoma",
+"WHO Hematolymphoid Classification",
+"ESMO Lymphoma Guidelines"
+]
+},
+
+
+"Non-follicular Lymphoma": {
+explanation:
+`CLINICAL SUMMARY:
+Non-follicular lymphoma represents a broad group of lymphoid malignancies.
+
+CLINICAL NOTE:
+This application only generates an educational rule-based flag.
+
+Further evaluation may include specialist assessment, imaging and tissue-based testing.`,
+
+references: [
+"WHO Lymphoma Classification",
+"NCI Non-Hodgkin Lymphoma Guide"
+]
+},
+
+
+"T/NK-cell Lymphoma": {
+explanation:
+`CLINICAL SUMMARY:
+T/NK-cell lymphomas are lymphoid malignancies involving mature T or NK cells.
+
+CLINICAL NOTE:
+An elevated calcium value alone cannot diagnose T/NK-cell lymphoma.
+
+Specialist clinical assessment and definitive testing are required.`,
+
+references: [
+"WHO Hematolymphoid Tumours Classification",
+"NCCN T-Cell Lymphoma Guidelines",
+"ESMO T-cell Lymphoma Recommendations"
+]
+},
+
+
+"Other Non-Hodgkin Lymphoma": {
+explanation:
+`CLINICAL SUMMARY:
+Non-Hodgkin lymphoma includes a heterogeneous group of lymphoid malignancies.
+
+CLINICAL NOTE:
+An elevated CRP alone does not establish lymphoma.
+
+Further diagnostic workup must be guided by clinical findings.`,
+
+references: [
+"WHO Classification of Haematolymphoid Tumours",
+"NCI Non-Hodgkin Lymphoma Guide",
+"ESMO Clinical Practice Guidelines"
+]
+},
+
+
+"Multiple Myeloma": {
+explanation:
+`CLINICAL SUMMARY:
+Multiple myeloma is a plasma-cell malignancy.
+
+LAB INTERPRETATION:
+Calcium and red-cell abnormalities may occur in multiple myeloma, but these findings are not specific.
+
+CLINICAL NOTE:
+The rule in this application is an educational screening rule and does not diagnose multiple myeloma.`,
+
+references: [
+"International Myeloma Working Group Criteria",
+"NCCN Guidelines: Multiple Myeloma",
+"British Society for Haematology: Myeloma Guidelines"
+]
+},
+
+
+"Thrombocytopenia": {
+explanation:
+`CLINICAL SUMMARY:
+Thrombocytopenia refers to a reduced platelet count.
+
+PATHOPHYSIOLOGY:
+Causes include decreased production, increased destruction or increased consumption.
+
+DIFFERENTIAL DIAGNOSIS:
+- Immune thrombocytopenia
+- Bone marrow suppression
+- Infection
+- Medication-related causes`,
+
+references: [
+"American Society of Hematology Guidelines for ITP",
+"NICE Blood Disorders guidance"
+]
+},
+
+
+"Thrombocytosis": {
+explanation:
+`CLINICAL SUMMARY:
+Thrombocytosis refers to an elevated platelet count.
+
+POSSIBLE CATEGORIES:
+- Reactive thrombocytosis
+- Iron deficiency
+- Inflammatory disorders
+- Myeloproliferative disorders
+
+Further evaluation depends on the clinical context.`,
+
+references: [
+"British Society for Haematology: Thrombocytosis Guidelines",
+"NCCN Myeloproliferative Neoplasms Guidelines",
+"WHO Classification of Myeloid Neoplasms"
+]
+},
+
+
+"Dehydration": {
+explanation:
+`CLINICAL SUMMARY:
+Fluid deficit can cause changes in renal laboratory measurements.
+
+CLINICAL NOTE:
+The rule used here is based on elevated urea and creatinine and is not specific for dehydration.
+
+Other causes of renal dysfunction must be considered.`,
+
+references: [
+"WHO Fluid and Electrolyte Management guidance",
+"NICE Clinical Knowledge Summary: Dehydration",
+"Merck Manual: Fluid Volume Disorders"
+]
+},
+
+
+"Other Diseases of Blood and Blood-forming Organs": {
+explanation:
+`CLINICAL SUMMARY:
+This is a broad educational category for hematological findings that do not fit a more specific programmed category.
+
+CLINICAL NOTE:
+The rule is intentionally broad and should not be interpreted as a diagnosis.
+
+Further evaluation should depend on the patient's clinical findings and laboratory profile.`,
+
+references: [
+"WHO ICD-11: Diseases of the Blood and Blood-Forming Organs",
+"Merck Manual: Hematologic Disorders Overview",
+"NICE Hematology Reference Guidance"
+]
+}
+
+};
+
+
+/* =========================
+   RUN ANALYSIS
+========================= */
+
+function runAnalysis() {
+
+    const data = collectData();
+
+    if (!data.gender) {
+
+        alert("Please select the patient's gender.");
+
+        showPage("input");
+
+        return;
+    }
+
+    lastData = data;
+
+    lastResults = evaluate(data);
+
+    renderResults();
+
+    renderExplanations();
+
+    showPage("results");
+}
+
+
+/* =========================
+   RENDER RESULTS
+========================= */
+
+function renderResults() {
+
+    const summary =
+        document.getElementById("summary");
+
+    const container =
+        document.getElementById("resultsContainer");
+
+    summary.textContent =
+        generateSummary(lastResults);
+
+
+    if (!lastResults.length) {
+
+        container.innerHTML = `
+            <div class="result-card low">
+
+                <div class="result-header">
+
+                    <h3>No Significant Abnormalities Detected</h3>
+
+                    <span class="badge low">
+                        LOW
+                    </span>
+
+                </div>
+
+                <p>
+                    No programmed rule was triggered by the entered
+                    laboratory values.
+                </p>
+
+            </div>
+        `;
+
+        renderPatientData();
+
+        return;
+    }
+
+
+    container.innerHTML =
+        lastResults.map(function(result) {
+
+            const severity =
+                getSeverity(result.condition);
+
+            return `
+
+                <div class="result-card ${severity.className}">
+
+                    <div class="result-header">
+
+                        <h3>
+                            ${escapeHtml(result.condition)}
+                        </h3>
+
+                        <span class="badge ${severity.className}">
+                            ${severity.level}
+                        </span>
+
+                    </div>
+
+                    <div class="suggestion">
+
+                        <strong>Suggestion 1:</strong><br>
+
+                        ${escapeHtml(result.suggestion_1)}
+
+                    </div>
+
+                    <div class="suggestion">
+
+                        <strong>Suggestion 2:</strong><br>
+
+                        ${escapeHtml(result.suggestion_2)}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+
+    renderPatientData();
+}
+
+
+/* =========================
+   PATIENT DATA TABLE
+========================= */
+
+function renderPatientData() {
+
+    const container =
+        document.getElementById("patientDataTable");
+
+    if (!lastData) {
+
+        container.innerHTML =
+            "No patient data available.";
+
+        return;
+    }
+
+
+    const labels = {
+
+        patient_name: "Patient Name",
+        patient_id: "Patient ID",
+        age: "Age",
+        gender: "Gender",
+
+        rbc: "RBC",
+        hb: "Hemoglobin",
+        mcv: "MCV",
+        ferritin: "Ferritin",
+        vitamin_b12: "Vitamin B12",
+        folate: "Folate",
+        iron: "Iron",
+        wbc: "WBC",
+        crp: "CRP",
+        esr: "ESR",
+        monocyte_number: "Monocyte Number",
+        ldh: "LDH",
+        plt: "Platelets",
+        urea: "Urea",
+        creatinine: "Creatinine",
+        calcium: "Calcium"
+    };
+
+
+    const units = {
+
+        rbc: "×10¹²/L",
+        hb: "g/L",
+        mcv: "fL",
+        ferritin: "µg/L",
+        vitamin_b12: "pmol/L",
+        folate: "nmol/L",
+        iron: "µmol/L",
+        wbc: "×10⁹/L",
+        crp: "mg/L",
+        esr: "mm/hour",
+        monocyte_number: "×10⁹/L",
+        ldh: "U/L",
+        plt: "×10⁹/L",
+        urea: "mg/dL",
+        creatinine: "µmol/L",
+        calcium: "mmol/L"
+    };
+
+
+    let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Parameter</th>
+
+                    <th>Value</th>
+
+                    <th>Unit</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+    `;
+
+
+    Object.keys(lastData).forEach(function(key) {
+
+        if (
+            lastData[key] === null ||
+            lastData[key] === ""
+        ) {
+            return;
+        }
+
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${escapeHtml(labels[key] || key)}
+                </td>
+
+                <td>
+                    ${escapeHtml(String(lastData[key]))}
+                </td>
+
+                <td>
+                    ${escapeHtml(units[key] || "")}
+                </td>
+
+            </tr>
+
+        `;
+    });
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+
+    container.innerHTML = html;
+}
+
+
+/* =========================
+   EXPLANATIONS
+========================= */
+
+function renderExplanations() {
+
+    const container =
+        document.getElementById("explanationsContainer");
+
+
+    if (!lastResults.length) {
+
+        container.innerHTML = `
+
+            <p>
+                No findings are currently available for explanation.
+            </p>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        lastResults.map(function(result) {
+
+            const data =
+                explanations[result.condition];
+
+
+            if (!data) {
+
+                return `
+
+                    <div class="card">
+
+                        <h3>
+                            ${escapeHtml(result.condition)}
+                        </h3>
+
+                        <div class="explanation">
+                            No structured clinical explanation available.
+                        </div>
+
+                    </div>
+
+                `;
+            }
+
+
+            return `
+
+                <div class="card">
+
+                    <h2>
+                        ${escapeHtml(result.condition)}
+                    </h2>
+
+                    <div class="explanation">
+                        ${escapeHtml(data.explanation)}
+                    </div>
+
+                    <h3>References</h3>
+
+                    ${data.references.map(function(reference) {
+
+                        return `
+                            <div class="reference">
+                                • ${escapeHtml(reference)}
+                            </div>
+                        `;
+
+                    }).join("")}
+
+                </div>
+
+            `;
+
+        }).join("");
+}
+
+
+/* =========================
+   CLEAR FORM
+========================= */
+
+function clearForm() {
+
+    document.querySelectorAll(
+        "#input input"
+    ).forEach(function(input) {
+
+        input.value = "";
+
+    });
+
+
+    document.getElementById("gender").value = "";
+
+    lastData = null;
+
+    lastResults = [];
+
+
+    document.getElementById("summary").textContent =
+        "No analysis has been performed yet.";
+
+
+    document.getElementById("resultsContainer").innerHTML = `
+
+        <p>
+            Enter patient laboratory values and run the analysis.
+        </p>
+
+    `;
+
+
+    document.getElementById("patientDataTable").innerHTML =
+        "No patient data available.";
+
+
+    document.getElementById("explanationsContainer").innerHTML = `
+
+        <p>
+            Run an analysis first to display clinical explanations
+            for identified findings.
+        </p>
+
+    `;
+
+
+    showPage("input");
+}
+
+
+/* =========================
+   DOWNLOAD JSON
+========================= */
+
+function downloadJSON() {
+
+    if (!lastData) {
+
+        alert("Please run an analysis first.");
+
+        return;
+    }
+
+
+    const output = {
+
+        patient: lastData,
+
+        results: lastResults,
+
+        summary: generateSummary(lastResults),
+
+        generated_at:
+            new Date().toISOString(),
+
+        disclaimer:
+            "Educational purposes only. Not a substitute for professional medical advice, diagnosis or treatment."
+    };
+
+
+    const blob =
+        new Blob(
+            [JSON.stringify(output, null, 2)],
+            {
+                type: "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "blood-test-ai-report.json";
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+
+
+/* =========================
+   HTML ESCAPE
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   INITIAL PAGE
+========================= */
+
+showPage("home");
+
+</script>
+
 </body>
 </html>
